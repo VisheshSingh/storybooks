@@ -1,3 +1,4 @@
+const path = require('path');
 const express = require('express');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
@@ -22,6 +23,9 @@ app.set('view engine', '.hbs');
 
 // routes
 app.use('/', require('./routes/index'));
+
+// static assets
+app.use(express.static(path.join(__dirname, 'public')));
 
 const PORT = process.env.PORT || 3000;
 
