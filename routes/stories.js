@@ -9,6 +9,25 @@ router.get('/add', ensureAuth, (req, res) => {
   res.render('stories/add');
 });
 
+// @desc    Show story
+// @method  GET /stories/:id
+router.get('/:id', ensureAuth, async (req, res) => {
+  try {
+    const story = await Story.findById(req.params.id).populate('user').lean();
+
+    if (!story) {
+      return res.render('error/404');
+    }
+
+    res.render('stories/show', {
+      story,
+    });
+  } catch (error) {
+    console.log(error);
+    res.render('error/404');
+  }
+});
+
 // @desc    Process the add
 // @method  POST /
 router.post('/', ensureAuth, async (req, res) => {
