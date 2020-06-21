@@ -28,6 +28,30 @@ router.get('/:id', ensureAuth, async (req, res) => {
   }
 });
 
+// @desc    User stories
+// @method  GET /stories/user/:id
+router.get('/user/:userId', ensureAuth, async (req, res) => {
+  try {
+    const stories = await Story.find({
+      user: req.params.userId,
+      status: 'public',
+    })
+      .populate('user')
+      .lean();
+
+    if (!stories) {
+      return res.render('error/404');
+    }
+
+    res.render('stories/index', {
+      stories,
+    });
+  } catch (error) {
+    console.log(error);
+    res.render('error/404');
+  }
+});
+
 // @desc    Process the add
 // @method  POST /
 router.post('/', ensureAuth, async (req, res) => {
